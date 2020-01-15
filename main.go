@@ -27,7 +27,14 @@ func getPeopleEndPoint(w http.ResponseWriter, req *http.Request) {
 }
 
 func getPersonEndPoint(w http.ResponseWriter, req *http.Request) {
-
+	params := mux.Vars(req)
+	for _, item := range people {
+		if item.ID == params["id"] {
+			json.NewEncoder(w).Encode(item)
+			return
+		}
+	}
+	json.NewEncoder(w).Encode(&Person{})
 }
 
 func storePersonEndPoint(w http.ResponseWriter, req *http.Request) {
@@ -49,7 +56,7 @@ func main() {
 	people = append(people, Person{ID: "1", FirstName: "juan", LastName: "Moreno", Address: 
 	&Address{City: "Santiago", State: "Santiago"}})
 	
-	people = append(people, Person{ID: "1", FirstName: "Pedro", LastName: "Perez", Address: 
+	people = append(people, Person{ID: "2", FirstName: "Pedro", LastName: "Perez", Address: 
 	&Address{City: "Santiago", State: "Santiago"}})
 
 	// endpoints

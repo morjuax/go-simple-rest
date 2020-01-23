@@ -38,7 +38,15 @@ func getPersonEndPoint(w http.ResponseWriter, req *http.Request) {
 }
 
 func storePersonEndPoint(w http.ResponseWriter, req *http.Request) {
+	params := mux.Vars(req)
 
+	var person Person 
+	_ = json.NewDecoder(req.Body).Decode(&person)
+
+	person.ID = params["id"]
+	people = append(people, person)
+
+	json.NewEncoder(w).Encode(people)
 }
 
 func updatePersonEndPoint(w http.ResponseWriter, req *http.Request) {
@@ -62,7 +70,7 @@ func main() {
 	// endpoints
 	router.HandleFunc("/people", getPeopleEndPoint).Methods("GET")
 	router.HandleFunc("/people/{id}", getPersonEndPoint).Methods("GET")
-	router.HandleFunc("/people/", storePersonEndPoint).Methods("POST")
+	router.HandleFunc("/people/{id}", storePersonEndPoint).Methods("POST")
 	router.HandleFunc("/people/", updatePersonEndPoint).Methods("PUT")
 	router.HandleFunc("/people/{id}", updatePersonEndPoint).Methods("DELETE")
 
